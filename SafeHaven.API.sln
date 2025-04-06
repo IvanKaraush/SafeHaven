@@ -12,6 +12,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionIt
 		SolutionItems\.env = SolutionItems\.env
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SaveHaven.Migrator", "SaveHaven.Migrator\SaveHaven.Migrator.csproj", "{B9CAE90B-5836-4CD8-9247-880B8498A592}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{050EEFA5-490A-4744-BA95-B48D9F701EEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{050EEFA5-490A-4744-BA95-B48D9F701EEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{050EEFA5-490A-4744-BA95-B48D9F701EEE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B9CAE90B-5836-4CD8-9247-880B8498A592}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9CAE90B-5836-4CD8-9247-880B8498A592}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9CAE90B-5836-4CD8-9247-880B8498A592}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9CAE90B-5836-4CD8-9247-880B8498A592}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
