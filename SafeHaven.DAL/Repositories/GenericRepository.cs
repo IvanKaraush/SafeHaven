@@ -1,9 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SafeHaven.DAL.Entities;
+using SafeHaven.DAL.Interfaces;
 
 namespace SafeHaven.DAL.Repositories;
 
-public abstract class GenericRepository<T> : IBaseRepository<T> where T : BaseEntity
+public abstract class GenericRepository<T> : IGenericRepository<T>
+    where T : BaseEntity
 {
     protected readonly InsuranceDbContext Context;
 
@@ -12,23 +14,33 @@ public abstract class GenericRepository<T> : IBaseRepository<T> where T : BaseEn
         Context = context;
     }
 
-    public async Task<T[]> GetAllAsync()
+    public async Task<IEnumerable<T>> GetAllAsync()
     {
-        return await Context.Set<T>().ToArrayAsync();
+        return await Context.Set<T>().AsNoTracking().ToListAsync();
     }
 
-    public async Task<T?> GetByIdAsync(Guid id)
+    public async Task<T?> GetByIdAsync(object? id)
     {
-        return await Context.Set<T>().FirstOrDefaultAsync(c => c.Id == id);
+        return await Context.Set<T>().FindAsync(id);
     }
 
-    public void Add(T entity)
+    public async Task AddAsync(T entity)
     {
-        Context.Set<T>().Add(entity);
+        await Context.AddAsync(entity);
     }
 
-    public void Delete(T entity)
+    public void Update(T entity)
     {
-        Context.Set<T>().Remove(entity);
+        Context.Update(entity);
+    }
+
+    public void Remove(T entity)
+    {
+        Context.Remove(entity);
+    }
+
+    public async Task SaveChangesAsync()
+    {
+        await Context.SaveChangesAsync();
     }
 }

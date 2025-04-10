@@ -12,10 +12,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Controllers\" />
-    </ItemGroup>
-
-    <ItemGroup>
+      <ProjectReference Include="..\SafeHaven.BLL\SafeHaven.BLL.csproj" />
       <ProjectReference Include="..\SafeHaven.DAL\SafeHaven.DAL.csproj" />
     </ItemGroup>
 

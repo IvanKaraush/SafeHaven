@@ -1,15 +1,34 @@
-﻿namespace SafeHaven.DAL.Entities;
-
-public class Payment : BaseEntity
+﻿namespace SafeHaven.DAL.Entities
 {
-    public DateTime PaymentDate { get; private set; }
-    public decimal Amount { get; private set; }
-
-    public Contract Contract { get; private set; }
-
-    public Payment(DateTime paymentDate, decimal amount)
+    /// <summary>
+    /// Представляет платеж, произведенный по договору страхования.
+    /// </summary>
+    public class Payment : BaseEntity
     {
-        PaymentDate = paymentDate;
-        Amount = amount;
+        /// <summary>
+        /// Дата платежа.
+        /// </summary>
+        public DateTime PaymentDate { get; private set; }
+        
+        /// <summary>
+        /// Сумма платежа.
+        /// </summary>
+        public decimal Amount { get; private set; }
+        
+        /// <summary>
+        /// Договор, к которому относится данный платеж.
+        /// </summary>
+        public Contract Contract { get; private set; }
+
+        /// <summary>
+        /// Создает новый экземпляр платежа.
+        /// </summary>
+        /// <param name="paymentDate">Дата платежа.</param>
+        /// <param name="amount">Сумма платежа.</param>
+        public Payment(DateTime paymentDate, decimal amount)
+        {
+            PaymentDate = paymentDate;
+            Amount = amount;
+        }
     }
 }
