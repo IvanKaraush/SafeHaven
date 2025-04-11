@@ -15,11 +15,9 @@ public class ContractConfiguration : IEntityTypeConfiguration<Contract>
         builder.Property(c => c.PremiumAmount).HasColumnType("decimal(18,2)");
 
         builder.HasMany(c => c.InsuranceCases)
-            .WithOne(ic => ic.Contract)
-            .HasForeignKey(ic => ic.Id);
+            .WithOne(ic => ic.Contract);
 
         builder.HasMany(c => c.Payments)
-            .WithOne(p => p.Contract)
-            .HasForeignKey(p => p.Id);
+            .WithOne(p => p.Contract);
     }
 }

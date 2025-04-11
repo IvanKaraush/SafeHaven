@@ -10,4 +10,7 @@ public class ContractDto
     public bool ContractStatus { get; set; }
     public int ClientId { get; set; }
     public int InsuranceTypeId { get; set; }
+    public ClientDto Client { get; set; }
+    public InsuranceTypeDto InsuranceType { get; set; }
+    public List<InsuranceCaseDto> InsuranceCases { get; set; } = [];
 }

@@ -12,7 +12,7 @@ using SafeHaven.DAL;
 namespace SafeHaven.DAL.Migrations
 {
     [DbContext(typeof(InsuranceDbContext))]
-    [Migration("20250406100417_Initial")]
+    [Migration("20250411175103_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -65,6 +65,10 @@ namespace SafeHaven.DAL.Migrations
             modelBuilder.Entity("SafeHaven.DAL.Entities.Contract", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ClientId")
                         .HasColumnType("uuid");
 
                     b.Property<bool>("ContractStatus")
@@ -77,6 +81,9 @@ namespace SafeHaven.DAL.Migrations
                     b.Property<decimal>("InsuranceAmount")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<Guid>("InsuranceTypeId")
+                        .HasColumnType("uuid");
+
                     b.Property<decimal>("PremiumAmount")
                         .HasColumnType("decimal(18,2)");
 
@@ -85,16 +92,24 @@ namespace SafeHaven.DAL.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ClientId");
+
+                    b.HasIndex("InsuranceTypeId");
+
                     b.ToTable("Contracts");
                 });
 
             modelBuilder.Entity("SafeHaven.DAL.Entities.InsuranceCase", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CaseDate")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("ContractId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -105,6 +120,8 @@ namespace SafeHaven.DAL.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ContractId");
 
                     b.ToTable("InsuranceCases");
                 });
@@ -132,15 +149,21 @@ namespace SafeHaven.DAL.Migrations
             modelBuilder.Entity("SafeHaven.DAL.Entities.Payment", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<Guid>("ContractId")
+                        .HasColumnType("uuid");
+
                     b.Property<DateTime>("PaymentDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ContractId");
 
                     b.ToTable("Payments");
                 });
@@ -149,13 +172,13 @@ namespace SafeHaven.DAL.Migrations
                 {
                     b.HasOne("SafeHaven.DAL.Entities.Client", "Client")
                         .WithMany("Contracts")
-                        .HasForeignKey("Id")
+                        .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("SafeHaven.DAL.Entities.InsuranceType", "InsuranceType")
                         .WithMany("Contracts")
-                        .HasForeignKey("Id")
+                        .HasForeignKey("InsuranceTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -168,7 +191,7 @@ namespace SafeHaven.DAL.Migrations
                 {
                     b.HasOne("SafeHaven.DAL.Entities.Contract", "Contract")
                         .WithMany("InsuranceCases")
-                        .HasForeignKey("Id")
+                        .HasForeignKey("ContractId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -179,7 +202,7 @@ namespace SafeHaven.DAL.Migrations
                 {
                     b.HasOne("SafeHaven.DAL.Entities.Contract", "Contract")
                         .WithMany("Payments")
-                        .HasForeignKey("Id")
+                        .HasForeignKey("ContractId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

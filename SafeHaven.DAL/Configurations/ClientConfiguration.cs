@@ -16,7 +16,6 @@ public class ClientConfiguration : IEntityTypeConfiguration<Client>
 
         builder.HasMany(c => c.Contracts)
             .WithOne(c => c.Client)
-            .HasForeignKey(c => c.Id)
             .OnDelete(DeleteBehavior.Cascade);
     }
 }

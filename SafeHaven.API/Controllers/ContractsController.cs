@@ -108,13 +108,8 @@ public class ContractsController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] ContractDto contractDto)
     {
-        if (contractDto == null)
-        {
-            return BadRequest("Данные договора не предоставлены.");
-        }
-
-        var createdContract = await _contractService.CreateContractAsync(contractDto);
-        return CreatedAtAction(nameof(GetById), new { id = createdContract.Id }, createdContract);
+        var contractId = await _contractService.CreateContractAsync(contractDto);
+        return CreatedAtAction(nameof(GetById), new { id = contractId }, contractId);
     }
 
     /// <summary>

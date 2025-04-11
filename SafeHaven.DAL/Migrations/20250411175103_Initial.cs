@@ -50,20 +50,22 @@ namespace SafeHaven.DAL.Migrations
                     EndDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     InsuranceAmount = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
                     PremiumAmount = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
-                    ContractStatus = table.Column<bool>(type: "boolean", maxLength: 50, nullable: false)
+                    ContractStatus = table.Column<bool>(type: "boolean", maxLength: 50, nullable: false),
+                    ClientId = table.Column<Guid>(type: "uuid", nullable: false),
+                    InsuranceTypeId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Contracts", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Contracts_Clients_Id",
-                        column: x => x.Id,
+                        name: "FK_Contracts_Clients_ClientId",
+                        column: x => x.ClientId,
                         principalTable: "Clients",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Contracts_InsuranceTypes_Id",
-                        column: x => x.Id,
+                        name: "FK_Contracts_InsuranceTypes_InsuranceTypeId",
+                        column: x => x.InsuranceTypeId,
                         principalTable: "InsuranceTypes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -76,14 +78,15 @@ namespace SafeHaven.DAL.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     CaseDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
-                    PayoutAmount = table.Column<decimal>(type: "numeric(18,2)", nullable: false)
+                    PayoutAmount = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
+                    ContractId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_InsuranceCases", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_InsuranceCases_Contracts_Id",
-                        column: x => x.Id,
+                        name: "FK_InsuranceCases_Contracts_ContractId",
+                        column: x => x.ContractId,
                         principalTable: "Contracts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -95,18 +98,39 @@ namespace SafeHaven.DAL.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     PaymentDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    Amount = table.Column<decimal>(type: "numeric(18,2)", nullable: false)
+                    Amount = table.Column<decimal>(type: "numeric(18,2)", nullable: false),
+                    ContractId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Payments", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Payments_Contracts_Id",
-                        column: x => x.Id,
+                        name: "FK_Payments_Contracts_ContractId",
+                        column: x => x.ContractId,
                         principalTable: "Contracts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Contracts_ClientId",
+                table: "Contracts",
+                column: "ClientId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Contracts_InsuranceTypeId",
+                table: "Contracts",
+                column: "InsuranceTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_InsuranceCases_ContractId",
+                table: "InsuranceCases",
+                column: "ContractId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Payments_ContractId",
+                table: "Payments",
+                column: "ContractId");
         }
 
         /// <inheritdoc />

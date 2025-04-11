@@ -23,7 +23,7 @@ public class ContractService : IContractService
         var contracts = await _contractRepository.GetByIdAsync(id);
         return _mapper.Map<ContractDto>(contracts);
     }
-    
+
     public async Task<IEnumerable<ContractDto>> GetAllContractsAsync()
     {
         var contracts = await _contractRepository.GetAllAsync();
@@ -63,12 +63,16 @@ public class ContractService : IContractService
         return _mapper.Map<IEnumerable<ContractDto>>(contracts);
     }
 
-    public async Task<ContractDto> CreateContractAsync(ContractDto contractDto)
+    public async Task<Guid> CreateContractAsync(ContractDto contractDto)
     {
-        var contract = _mapper.Map<Contract>(contractDto);
+        var contract = new Contract(contractDto.StartDate, contractDto.EndDate, contractDto.InsuranceAmount,
+            contractDto.PremiumAmount, contractDto.ContractStatus,
+            new Client(contractDto.Client.FullName, contractDto.Client.DateOfBirth, contractDto.Client.PassportNumber,
+                contractDto.Client.Address, contractDto.Client.Phone, contractDto.Client.Email),
+            new InsuranceType(contractDto.InsuranceType.Name, contractDto.InsuranceType.Description));
         await _contractRepository.AddAsync(contract);
         await _contractRepository.SaveChangesAsync();
-        return _mapper.Map<ContractDto>(contract);
+        return contract.Id;
     }
 
     public async Task UpdateAsync(ContractDto contractDto)

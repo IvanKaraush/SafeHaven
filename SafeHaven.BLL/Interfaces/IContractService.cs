@@ -10,7 +10,7 @@ public interface IContractService
     Task<IEnumerable<ContractDto>> GetContractsWithPremiumGreaterThanAsync(decimal premium);
     Task<InsuranceSummaryDto> GetSummaryByInsuranceTypeAsync(string insuranceTypeName);
     Task<IEnumerable<ContractDto>> GetActiveContractsAsync();
-    Task<ContractDto> CreateContractAsync(ContractDto contractDto);
+    Task<Guid> CreateContractAsync(ContractDto contractDto);
     Task UpdateAsync(ContractDto contractDto);
     Task DeleteAsync(Guid id);
 }

@@ -11,7 +11,6 @@ public class InsuranceTypeConfiguration : IEntityTypeConfiguration<InsuranceType
         builder.Property(i => i.Name).IsRequired().HasMaxLength(100);
 
         builder.HasMany(i => i.Contracts)
-            .WithOne(c => c.InsuranceType)
-            .HasForeignKey(c => c.Id);
+            .WithOne(c => c.InsuranceType);
     }
 }
