@@ -12,7 +12,7 @@ using SafeHaven.DAL;
 namespace SafeHaven.DAL.Migrations
 {
     [DbContext(typeof(InsuranceDbContext))]
-    [Migration("20250411175103_Initial")]
+    [Migration("20250412181452_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -20,7 +20,7 @@ namespace SafeHaven.DAL.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.14")
+                .HasAnnotation("ProductVersion", "8.0.15")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);

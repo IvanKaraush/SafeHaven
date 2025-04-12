@@ -23,7 +23,7 @@ public class InsuranceCase : BaseEntity
     /// <summary>
     /// Договор, к которому относится данный страховой случай.
     /// </summary>
-    public Contract Contract { get; set; }
+    public required Contract Contract { get; set; }
 
     /// <summary>
     /// Создает новый экземпляр страхового случая.

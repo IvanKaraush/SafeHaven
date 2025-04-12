@@ -18,7 +18,7 @@ public class Payment : BaseEntity
     /// <summary>
     /// Договор, к которому относится данный платеж.
     /// </summary>
-    public Contract Contract { get; set; }
+    public required Contract Contract { get; set; }
 
     /// <summary>
     /// Создает новый экземпляр платежа.

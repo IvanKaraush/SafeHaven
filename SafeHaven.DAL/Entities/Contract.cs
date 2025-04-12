@@ -50,19 +50,8 @@ public class Contract : BaseEntity
     /// Коллекция платежей по данному договору.
     /// Доступна только для чтения.
     /// </summary>
-    public IReadOnlyCollection<Payment> Payments => payments.AsReadOnly();
+    public List<Payment> Payments { get; set; } = [];
 
-    // Внутренний список для хранения платежей.
-    private readonly List<Payment> payments = [];
-
-    /// <summary>
-    /// Создает новый экземпляр договора страхования.
-    /// </summary>
-    /// <param name="startDate">Дата начала действия договора.</param>
-    /// <param name="endDate">Дата окончания действия договора.</param>
-    /// <param name="insuranceAmount">Страховая сумма.</param>
-    /// <param name="premiumAmount">Размер страховой премии.</param>
-    /// <param name="contractStatus">Статус договора (активен или нет).</param>
     public Contract(DateTime startDate, DateTime endDate, decimal insuranceAmount, decimal premiumAmount,
         bool contractStatus, Client client, InsuranceType insuranceType)
     {
@@ -75,6 +64,7 @@ public class Contract : BaseEntity
         InsuranceType = insuranceType;
     }
 
+    // ReSharper disable once UnusedMember.Local
     private Contract()
     {
     }

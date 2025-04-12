@@ -59,7 +59,7 @@ public class ContractService : IContractService
 
     public async Task<IEnumerable<ContractDto>> GetActiveContractsAsync()
     {
-        var contracts = await _contractRepository.GetActiveContractsAsync(DateTime.Now);
+        var contracts = await _contractRepository.GetActiveContractsAsync(DateTime.UtcNow);
         return _mapper.Map<IEnumerable<ContractDto>>(contracts);
     }
 
@@ -77,10 +77,15 @@ public class ContractService : IContractService
 
     public async Task UpdateAsync(ContractDto contractDto)
     {
-        var contract = _mapper.Map<Contract>(contractDto);
+        var contract = await _contractRepository.GetByIdAsync(contractDto.Id) ??
+                       throw new NotFoundException($"Не найден контракт {contractDto.Id}");
+
+        _mapper.Map(contractDto, contract);
+
         _contractRepository.Update(contract);
         await _contractRepository.SaveChangesAsync();
     }
+
 
     public async Task DeleteAsync(Guid id)
     {

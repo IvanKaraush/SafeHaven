@@ -19,7 +19,7 @@ public static class DependencyExtensions
     /// <returns>Коллекция сервисов с добавленными зависимостями.</returns>
     public static IServiceCollection RegisterBll(this IServiceCollection services)
     {
-        services.AddAutoMapper(typeof(MappingProfile));
+        services.AddAutoMapper(typeof(PaymentMappingProfile).Assembly);
 
         services.AddScoped<IContractRepository, ContractRepository>();
 

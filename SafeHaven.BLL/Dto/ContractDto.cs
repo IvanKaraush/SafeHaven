@@ -8,9 +8,8 @@ public class ContractDto
     public decimal InsuranceAmount { get; set; }
     public decimal PremiumAmount { get; set; }
     public bool ContractStatus { get; set; }
-    public int ClientId { get; set; }
-    public int InsuranceTypeId { get; set; }
-    public ClientDto Client { get; set; }
-    public InsuranceTypeDto InsuranceType { get; set; }
+    public required ClientDto Client { get; set; }
+    public required InsuranceTypeDto InsuranceType { get; set; }
     public List<InsuranceCaseDto> InsuranceCases { get; set; } = [];
+    public List<PaymentDto> Payments { get; set; } = [];
 }
