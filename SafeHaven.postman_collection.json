@@ -1,0 +1,502 @@
+{
+	"info": {
+		"_postman_id": "d0b2ca72-0615-403b-bb5f-b964d1cdf164",
+		"name": "SafeHaven",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "25217997"
+	},
+	"item": [
+		{
+			"name": "Contracts",
+			"item": [
+				{
+					"name": "CreateContract",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Response body is not empty', function () {\r",
+									"    pm.expect(pm.response.text()).to.not.be.empty;\r",
+									"});\r",
+									"pm.environment.set(\"ContractId\", pm.response.json());\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"startDate\": \"2025-01-01T00:00:00Z\",\r\n  \"endDate\": \"2026-01-01T00:00:00Z\",\r\n  \"insuranceAmount\": 1000000,\r\n  \"premiumAmount\": 12000,\r\n  \"contractStatus\": true,\r\n  \"client\": {\r\n    \"fullName\": \"Иванов Иван Иванович\",\r\n    \"dateOfBirth\": \"1990-05-15T00:00:00Z\",\r\n    \"passportNumber\": \"4510 123456\",\r\n    \"address\": \"г. Москва, ул. Ленина, д. 10, кв. 5\",\r\n    \"phone\": \"+7 (999) 123-45-67\",\r\n    \"email\": \"ivan.ivanov@example.com\"\r\n  },\r\n  \"insuranceType\": {\r\n    \"name\": \"Автострахование\",\r\n    \"description\": \"Страхование автомобиля от ущерба, угона и ДТП\"\r\n  },\r\n  \"insuranceCases\": [\r\n    {\r\n      \"caseDate\": \"2025-06-15T00:00:00Z\",\r\n      \"description\": \"ДТП на перекрестке, повреждение переднего бампера\",\r\n      \"payoutAmount\": 85000\r\n    }\r\n  ],\r\n  \"payments\": [\r\n    {\r\n      \"paymentDate\": \"2025-01-01T00:00:00Z\",\r\n      \"amount\": 12000,\r\n      \"contractId\": 1\r\n    }\r\n  ]\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{SafeHavenUrl}}/api/Contract"
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateContract",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Response status code is 204', function () {\r",
+									"    pm.response.to.have.status(204);\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": \"{{ContractId}}\",\r\n  \"startDate\": \"2025-04-01T00:00:00Z\",\r\n  \"endDate\": \"2026-04-01T00:00:00Z\",\r\n  \"insuranceAmount\": 500000,\r\n  \"premiumAmount\": 15000,\r\n  \"contractStatus\": true,\r\n  \"client\": {\r\n    \"fullName\": \"Петров Алексей Сергеевич\",\r\n    \"dateOfBirth\": \"1985-09-10T00:00:00Z\",\r\n    \"passportNumber\": \"4601 987654\",\r\n    \"address\": \"г. Санкт-Петербург, Невский проспект, д. 100, кв. 12\",\r\n    \"phone\": \"+7 (921) 555-66-77\",\r\n    \"email\": \"petrov.alexey@example.com\"\r\n  },\r\n  \"insuranceType\": {\r\n    \"name\": \"Страхование жилья\",\r\n    \"description\": \"Полис страхования квартиры от пожара, затопления и кражи\"\r\n  },\r\n  \"insuranceCases\": [\r\n    {\r\n      \"caseDate\": \"2025-08-20T00:00:00Z\",\r\n      \"description\": \"Затопление квартиры из-за прорыва трубы у соседей сверху\",\r\n      \"payoutAmount\": 120000\r\n    }\r\n  ],\r\n  \"payments\": [\r\n    {\r\n      \"paymentDate\": \"2025-04-01T00:00:00Z\",\r\n      \"amount\": 15000,\r\n      \"contractId\": 101\r\n    }\r\n  ]\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{SafeHavenUrl}}/api/contract"
+					},
+					"response": []
+				},
+				{
+					"name": "GetContract",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Response status code is 200', function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": "{{SafeHavenUrl}}/api/contract/{{ContractId}}"
+					},
+					"response": []
+				},
+				{
+					"name": "GetContracts",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Response status code is 200', function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": "{{SafeHavenUrl}}/api/contract/1/50"
+					},
+					"response": []
+				},
+				{
+					"name": "GertContractsGreaterThan",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Response status code is 200', function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": "{{SafeHavenUrl}}/api/Contract/premium/greater-than/1"
+					},
+					"response": []
+				},
+				{
+					"name": "GetContractsLessThan",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Response status code is 200', function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": "{{SafeHavenUrl}}/api/Contract/premium/less-than/1"
+					},
+					"response": []
+				},
+				{
+					"name": "GetActiveContracts",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Response status code is 200', function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": "{{SafeHavenUrl}}/api/Contract/active"
+					},
+					"response": []
+				},
+				{
+					"name": "GetInsuranceTypeByContractId",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Response status code is 200', function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": "{{SafeHavenUrl}}/api/contract/insurance-type/{{ContractId}}"
+					},
+					"response": []
+				},
+				{
+					"name": "GetUnsuranceCase",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Response status code is 200', function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": "{{SafeHavenUrl}}/api/contract/insurance-case/{{ContractId}}"
+					},
+					"response": []
+				},
+				{
+					"name": "GetPayment",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Response status code is 200', function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": "{{SafeHavenUrl}}/api/contract/payment/{{ContractId}}"
+					},
+					"response": []
+				},
+				{
+					"name": "GetInsuranceTypes",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Response status code is 200', function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": "{{SafeHavenUrl}}/api/contract/insurance-type/pagination/1/100"
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteContract",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Response body is not empty', function () {\r",
+									"    pm.expect(pm.response.text()).be.empty;\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": "{{SafeHavenUrl}}/api/contract/{{ContractId}}"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Clients",
+			"item": [
+				{
+					"name": "CreateClient",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Response body is not empty', function () {\r",
+									"    pm.expect(pm.response.text()).to.not.be.empty;\r",
+									"})\r",
+									"pm.environment.set(\"ClientGuid\", pm.response.json());\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "  {\r\n    \"fullName\": \"Пётр Петров\",\r\n    \"dateOfBirth\": \"1990-07-20T00:00:00Z\",\r\n    \"passportNumber\": \"CD7654321\",\r\n    \"address\": \"г. Бельцы, ул. Свободы, д. 10\",\r\n    \"phone\": \"+37398765432\",\r\n    \"email\": \"petrov@example.com\"\r\n  }\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{SafeHavenUrl}}/api/client"
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateClient",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Response status code is 204', function () {\r",
+									"    pm.response.to.have.status(204);\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "  {\r\n    \"id\": \"{{ClientGuid}}\",\r\n    \"fullName\": \"Пётр Петров\",\r\n    \"dateOfBirth\": \"1990-07-20T00:00:00\",\r\n    \"passportNumber\": \"CD7654321\",\r\n    \"address\": \"г. Бельцы, ул. Свободы, д. 10\",\r\n    \"phone\": \"+37398765432\",\r\n    \"email\": \"petrov@example.com\"\r\n  }\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{SafeHavenUrl}}/api/client"
+					},
+					"response": []
+				},
+				{
+					"name": "GetCLients",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Response status code is 200', function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": "{{SafeHavenUrl}}/api/client/1/50"
+					},
+					"response": []
+				},
+				{
+					"name": "GetClient",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Response status code is 200', function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": "{{SafeHavenUrl}}/api/client/{{ClientGuid}}"
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteClient",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('Response body is not empty', function () {\r",
+									"    pm.expect(pm.response.text()).be.empty;\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": "{{SafeHavenUrl}}/api/client/{{ClientGuid}}"
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
