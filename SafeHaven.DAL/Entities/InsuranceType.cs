@@ -40,7 +40,7 @@ public class InsuranceType : BaseEntity
     /// Коллекция договоров, применяющих этот тип страхования.
     /// Доступна только для чтения.
     /// </summary>
-    public List<Contract> Contracts { get; private set; } = new();
+    public List<Contract> Contracts { get; private set; } = [];
 
     /// <summary>
     /// Создает новый экземпляр типа страхования.

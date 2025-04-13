@@ -18,6 +18,33 @@ public class ContractService : IContractService
         _contractRepository = contractRepository;
     }
 
+    public async Task<InsuranceTypeDto> GetInsuranceTypeByIdAsync(Guid id)
+    {
+        var contract = await _contractRepository.GetByIdWithIncludeAsync(id) ??
+                       throw new NotFoundException($"Не найден контракт {id}");
+        return _mapper.Map<InsuranceTypeDto>(contract.InsuranceType);
+    }
+
+    public async Task<IEnumerable<InsuranceTypeDto>> GetInsuranceTypeWithPaginationAsync(int page, int pageSize)
+    {
+        var contracts = await _contractRepository.GetPaginatedWithIncludeAsync(page, pageSize);
+        return _mapper.Map<IEnumerable<InsuranceTypeDto>>(contracts.Select(c => c.InsuranceType));
+    }
+
+    public async Task<IEnumerable<PaymentDto>> GetPaymentByContractIdAsync(Guid id)
+    {
+        var contract = await _contractRepository.GetByIdWithIncludeAsync(id) ??
+                       throw new NotFoundException($"Не найден контракт {id}");
+        return _mapper.Map<IEnumerable<PaymentDto>>(contract.Payments);
+    }
+
+    public async Task<InsuranceCaseDto[]> GetInsuranceCaseByContractIdAsync(Guid id)
+    {
+        var contract = await _contractRepository.GetByIdWithIncludeAsync(id) ??
+                       throw new NotFoundException($"Не найден контракт {id}");
+        return _mapper.Map<InsuranceCaseDto[]>(contract.InsuranceCases);
+    }
+
     public async Task<IEnumerable<ContractDto>> GetContractsWithPremiumLessThanAsync(decimal premium)
     {
         var contracts = await _contractRepository.GetContractsWithPremiumLessThanAsync(premium);
@@ -45,9 +72,9 @@ public class ContractService : IContractService
 
     public async Task<ContractDto> GetByIdAsync(Guid id)
     {
-        var client = await _contractRepository.GetByFilterAsync(c => c.Id == id) ??
-                     throw new NotFoundException($"Не найден клиент {id}");
-        return _mapper.Map<ContractDto>(client);
+        var contract = await _contractRepository.GetByIdWithIncludeAsync(id) ??
+                       throw new NotFoundException($"Не найден контракт {id}");
+        return _mapper.Map<ContractDto>(contract);
     }
 
     public async Task<ContractDto[]> GetItemWithPaginationAsync(int page, int pageSize)
@@ -58,11 +85,15 @@ public class ContractService : IContractService
 
     public async Task<Guid> CreateAsync(ContractDto contractDto)
     {
+        var client = new Client(contractDto.Client.FullName, contractDto.Client.DateOfBirth,
+            contractDto.Client.PassportNumber, contractDto.Client.Address, contractDto.Client.Phone,
+            contractDto.Client.Email);
+        var insuranceType = new InsuranceType(contractDto.InsuranceType.Name, contractDto.InsuranceType.Description);
         var contract = new Contract(contractDto.StartDate, contractDto.EndDate, contractDto.InsuranceAmount,
-            contractDto.PremiumAmount, contractDto.ContractStatus,
-            new Client(contractDto.Client.FullName, contractDto.Client.DateOfBirth, contractDto.Client.PassportNumber,
-                contractDto.Client.Address, contractDto.Client.Phone, contractDto.Client.Email),
-            new InsuranceType(contractDto.InsuranceType.Name, contractDto.InsuranceType.Description));
+            contractDto.PremiumAmount, contractDto.ContractStatus, client, insuranceType,
+            contractDto.Payments.Select(c => new Payment(c.PaymentDate, c.Amount)).ToList(),
+            contractDto.InsuranceCases.Select(c => new InsuranceCase(c.CaseDate, c.Description, c.PayoutAmount)).ToList());
+
         await _contractRepository.AddAsync(contract);
         await _contractRepository.SaveChangesAsync();
         return contract.Id;

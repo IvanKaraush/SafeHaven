@@ -79,7 +79,6 @@ public class ContractController : ControllerBase
 
     /// <summary>
     /// Получение договора по идентификатору.
-    /// Если метод не реализован в сервисном слое, можно вернуть NotFound или NotImplemented.
     /// </summary>
     /// <param name="id">Идентификатор договора.</param>
     /// <returns>Договор в формате ContractDto.</returns>
@@ -104,7 +103,7 @@ public class ContractController : ControllerBase
     }
 
     /// <summary>
-    /// Обновляет существующий договор.
+    /// Обновление существующего договора.
     /// </summary>
     /// <param name="contractDto">Обновленные данные договора.</param>
     /// <returns>Результат операции.</returns>
@@ -116,7 +115,7 @@ public class ContractController : ControllerBase
     }
 
     /// <summary>
-    /// Удаляет существующий договор.
+    /// Удаление существующего договора.
     /// </summary>
     /// <param name="id">Идентификатор договора.</param>
     /// <returns>Результат операции.</returns>
@@ -125,5 +124,55 @@ public class ContractController : ControllerBase
     {
         await _contractService.DeleteAsync(id);
         return NoContent();
+    }
+
+    /// <summary>
+    /// Получение типа страхования по идентификатору договора.
+    /// </summary>
+    /// <param name="id">Идентификатор договора.</param>
+    /// <returns>Объект InsuranceTypeDto.</returns>
+    [HttpGet("insurance-type/{id:guid}")]
+    public async Task<IActionResult> GetInsuranceTypeById(Guid id)
+    {
+        var insuranceType = await _contractService.GetInsuranceTypeByIdAsync(id);
+        return Ok(insuranceType);
+    }
+
+    /// <summary>
+    /// Получение типов страхования с пагинацией.
+    /// Извлекается тип страхования из каждого договора.
+    /// </summary>
+    /// <param name="page">Номер страницы.</param>
+    /// <param name="pageSize">Размер страницы.</param>
+    /// <returns>Коллекция объектов InsuranceTypeDto.</returns>
+    [HttpGet("insurance-type/pagination/{page:int}/{pageSize:int}")]
+    public async Task<IActionResult> GetInsuranceTypesWithPagination(int page, int pageSize)
+    {
+        var insuranceTypes = await _contractService.GetInsuranceTypeWithPaginationAsync(page, pageSize);
+        return Ok(insuranceTypes);
+    }
+
+    /// <summary>
+    /// Получение платежей по идентификатору договора.
+    /// </summary>
+    /// <param name="id">Идентификатор договора.</param>
+    /// <returns>Объект PaymentDto.</returns>
+    [HttpGet("payment/{id:guid}")]
+    public async Task<IActionResult> GetPaymentByContractId(Guid id)
+    {
+        var payments = await _contractService.GetPaymentByContractIdAsync(id);
+        return Ok(payments);
+    }
+
+    /// <summary>
+    /// Получение страхового случая по идентификатору договора.
+    /// </summary>
+    /// <param name="id">Идентификатор договора.</param>
+    /// <returns>Объект InsuranceCaseDto.</returns>
+    [HttpGet("insurance-case/{id:guid}")]
+    public async Task<IActionResult> GetInsuranceCaseByContractId(Guid id)
+    {
+        var insuranceCase = await _contractService.GetInsuranceCaseByContractIdAsync(id);
+        return Ok(insuranceCase);
     }
 }

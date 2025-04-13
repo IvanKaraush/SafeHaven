@@ -4,6 +4,8 @@ namespace SafeHaven.DAL.Interfaces;
 
 public interface IContractRepository : IGenericRepository<Contract>
 {
+    Task<Contract> GetByIdWithIncludeAsync(Guid id);
+    Task<IEnumerable<Contract>> GetPaginatedWithIncludeAsync(int page, int pageSize);
     Task<Contract?> GetContractByIdAsync(Guid id);
 
     /// <summary>

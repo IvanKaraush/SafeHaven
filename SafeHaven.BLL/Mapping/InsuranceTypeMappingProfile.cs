@@ -14,6 +14,7 @@ public class InsuranceTypeMappingProfile : Profile
             .ForMember(dest => dest.TotalInsuranceAmount, opt => opt.MapFrom(src => src.Contracts.Sum(c => c.InsuranceAmount)))
             .ForMember(dest => dest.TotalPremiumAmount, opt => opt.MapFrom(src => src.Contracts.Sum(c => c.PremiumAmount)))
             .ReverseMap();
-
+        
+        CreateMap<InsuranceType, InsuranceTypeDto>().ReverseMap();
     }
 }

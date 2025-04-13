@@ -9,7 +9,6 @@ public class PaymentMappingProfile : Profile
     public PaymentMappingProfile()
     {
         CreateMap<Payment, PaymentDto>()
-            .ForMember(dto => dto.ContractId, opt => opt.MapFrom(entity => entity.Contract.Id))
             .ReverseMap();
     }
 }

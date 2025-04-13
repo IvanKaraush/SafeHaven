@@ -34,6 +34,27 @@ public class ContractRepository(InsuranceDbContext context) : GenericRepository<
             .ToListAsync();
     }
 
+    public async Task<Contract> GetByIdWithIncludeAsync(Guid id)
+    {
+        return await Context.Contracts
+            .Include(c => c.InsuranceType)
+            .Include(c => c.Client)
+            .Include(c => c.InsuranceCases)
+            .Include(c => c.Payments)
+            .FirstAsync(c => c.Id == id);
+    }
+    
+    public async Task<IEnumerable<Contract>> GetPaginatedWithIncludeAsync(int page, int pageSize)
+    {
+        return await Context.Contracts.AsNoTracking()
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .Include(c => c.InsuranceType)
+            .Include(c => c.Client)
+            .Include(c => c.InsuranceCases)
+            .Include(c => c.Payments).ToListAsync();
+    }
+    
     public async Task<IEnumerable<Contract>> GetActiveContractsAsync(DateTime currentDate)
     {
         return await Context.Contracts

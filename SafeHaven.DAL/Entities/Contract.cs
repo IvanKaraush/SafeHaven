@@ -2,7 +2,6 @@
 
 /// <summary>
 /// Представляет договор страхования, заключенный между клиентом и страховой компанией.
-/// Является агрегатным корнем, инкапсулирует поведение и логику валидации.
 /// </summary>
 public class Contract : BaseEntity
 {
@@ -41,16 +40,10 @@ public class Contract : BaseEntity
     /// </summary>
     public InsuranceType InsuranceType { get; private set; }
 
-    public IReadOnlyCollection<InsuranceCase> InsuranceCases => _insuranceCases.AsReadOnly();
-    private readonly List<InsuranceCase> _insuranceCases = [];
+    public List<InsuranceCase> InsuranceCases { get; private set; } = [];
 
-    public IReadOnlyCollection<Payment> Payments => _payments.AsReadOnly();
-    private readonly List<Payment> _payments = [];
+    public List<Payment> Payments { get; private set; } = [];
 
-    /// <summary>
-    /// Основной конструктор, задающий обязательные параметры договора.
-    /// Здесь можно добавить валидацию входных данных.
-    /// </summary>
     public Contract(
         DateTime startDate,
         DateTime endDate,
@@ -58,7 +51,9 @@ public class Contract : BaseEntity
         decimal premiumAmount,
         bool contractStatus,
         Client client,
-        InsuranceType insuranceType)
+        InsuranceType insuranceType,
+        List<Payment> payments,
+        List<InsuranceCase> insuranceCases )
     {
         if (endDate < startDate)
             throw new ArgumentException("Дата окончания не может быть раньше даты начала.", nameof(endDate));
@@ -70,6 +65,13 @@ public class Contract : BaseEntity
         ContractStatus = contractStatus;
         Client = client ?? throw new ArgumentNullException(nameof(client));
         InsuranceType = insuranceType ?? throw new ArgumentNullException(nameof(insuranceType));
+        Payments = payments;
+        InsuranceCases = insuranceCases;
+    }
+
+    // ReSharper disable once UnusedMember.Local
+    private Contract()
+    {
     }
 
     public void Update(
@@ -109,8 +111,8 @@ public class Contract : BaseEntity
             newInsuranceTypeDescription);
     }
 
-    // ReSharper disable once UnusedMember.Local
-    private Contract()
+    public void AddPayment(Payment payment)
     {
+        
     }
 }
