@@ -6,9 +6,14 @@ namespace SafeHaven.DAL.Repositories;
 
 public class ContractRepository(InsuranceDbContext context) : GenericRepository<Contract>(context), IContractRepository
 {
-    public async Task<Contract?> GetContractByIdAsync(int id)
+    public async Task<Contract?> GetContractByIdAsync(Guid id)
     {
-        return await Context.Contracts.FindAsync(id);
+        return await Context.Contracts
+            .Include(c => c.InsuranceType)
+            .Include(c => c.Client)
+            .Include(c => c.InsuranceCases)
+            .Include(c => c.Payments)
+            .FirstAsync(c => c.Id == id);
     }
 
     public async Task<IEnumerable<Contract>> GetContractsWithPremiumLessThanAsync(decimal premium)

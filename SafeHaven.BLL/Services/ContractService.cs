@@ -18,18 +18,6 @@ public class ContractService : IContractService
         _contractRepository = contractRepository;
     }
 
-    public async Task<ContractDto?> GetContractByIdAsync(Guid id)
-    {
-        var contracts = await _contractRepository.GetByIdAsync(id);
-        return _mapper.Map<ContractDto>(contracts);
-    }
-
-    public async Task<IEnumerable<ContractDto>> GetAllContractsAsync()
-    {
-        var contracts = await _contractRepository.GetAllAsync();
-        return _mapper.Map<IEnumerable<ContractDto>>(contracts);
-    }
-
     public async Task<IEnumerable<ContractDto>> GetContractsWithPremiumLessThanAsync(decimal premium)
     {
         var contracts = await _contractRepository.GetContractsWithPremiumLessThanAsync(premium);
@@ -44,17 +32,9 @@ public class ContractService : IContractService
 
     public async Task<InsuranceSummaryDto> GetSummaryByInsuranceTypeAsync(string insuranceTypeName)
     {
-        var contracts = (await _contractRepository.GetContractsByInsuranceTypeAsync(insuranceTypeName)).ToList();
+        var contracts = await _contractRepository.GetContractsByInsuranceTypeAsync(insuranceTypeName);
 
-        var summary = new InsuranceSummaryDto
-        {
-            InsuranceTypeName = insuranceTypeName,
-            ContractsCount = contracts.Count,
-            TotalInsuranceAmount = contracts.Sum(c => c.InsuranceAmount),
-            TotalPremiumAmount = contracts.Sum(c => c.PremiumAmount)
-        };
-
-        return summary;
+        return _mapper.Map<InsuranceSummaryDto>(contracts);
     }
 
     public async Task<IEnumerable<ContractDto>> GetActiveContractsAsync()
@@ -63,7 +43,20 @@ public class ContractService : IContractService
         return _mapper.Map<IEnumerable<ContractDto>>(contracts);
     }
 
-    public async Task<Guid> CreateContractAsync(ContractDto contractDto)
+    public async Task<ContractDto> GetByIdAsync(Guid id)
+    {
+        var client = await _contractRepository.GetByFilterAsync(c => c.Id == id) ??
+                     throw new NotFoundException($"Не найден клиент {id}");
+        return _mapper.Map<ContractDto>(client);
+    }
+
+    public async Task<ContractDto[]> GetItemWithPaginationAsync(int page, int pageSize)
+    {
+        var contracts = await _contractRepository.GetPaginatedAsync(page, pageSize);
+        return _mapper.Map<ContractDto[]>(contracts);
+    }
+
+    public async Task<Guid> CreateAsync(ContractDto contractDto)
     {
         var contract = new Contract(contractDto.StartDate, contractDto.EndDate, contractDto.InsuranceAmount,
             contractDto.PremiumAmount, contractDto.ContractStatus,
@@ -77,19 +70,20 @@ public class ContractService : IContractService
 
     public async Task UpdateAsync(ContractDto contractDto)
     {
-        var contract = await _contractRepository.GetByIdAsync(contractDto.Id) ??
+        var contract = await _contractRepository.GetContractByIdAsync(contractDto.Id) ??
                        throw new NotFoundException($"Не найден контракт {contractDto.Id}");
 
-        _mapper.Map(contractDto, contract);
-
-        _contractRepository.Update(contract);
+        contract.Update(contractDto.StartDate, contractDto.EndDate, contractDto.InsuranceAmount,
+            contractDto.PremiumAmount, contractDto.ContractStatus, contractDto.Client.FullName,
+            contractDto.Client.DateOfBirth, contractDto.Client.PassportNumber, contractDto.Client.Address,
+            contractDto.Client.Phone, contractDto.Client.Email, contractDto.InsuranceType.Name,
+            contractDto.InsuranceType.Description);
         await _contractRepository.SaveChangesAsync();
     }
 
-
     public async Task DeleteAsync(Guid id)
     {
-        var contract = await _contractRepository.GetByIdAsync(id) ??
+        var contract = await _contractRepository.GetByFilterAsync(c => c.Id == id) ??
                        throw new NotFoundException($"Не найден контракт {id}");
         _contractRepository.Remove(contract);
         await _contractRepository.SaveChangesAsync();

@@ -9,7 +9,7 @@ namespace SafeHaven.API.Controllers;
 /// </summary>
 [ApiController]
 [Route("api/[controller]")]
-public class ContractsController : ControllerBase
+public class ContractController : ControllerBase
 {
     private readonly IContractService _contractService;
 
@@ -17,19 +17,15 @@ public class ContractsController : ControllerBase
     /// Конструктор контроллера, внедрение зависимостей через DI.
     /// </summary>
     /// <param name="contractService">Сервис для работы с договорами.</param>
-    public ContractsController(IContractService contractService)
+    public ContractController(IContractService contractService)
     {
         _contractService = contractService;
     }
 
-    /// <summary>
-    /// Получение всех договоров.
-    /// </summary>
-    /// <returns>Список договоров в формате ContractDto.</returns>
-    [HttpGet]
-    public async Task<IActionResult> GetAll()
+    [HttpGet("{page:int}/{pageSize:int}")]
+    public async Task<IActionResult> GetContractsWithPagination([FromRoute] int page, int pageSize)
     {
-        var contracts = await _contractService.GetAllContractsAsync();
+        var contracts = await _contractService.GetItemWithPaginationAsync(page, pageSize);
         return Ok(contracts);
     }
 
@@ -90,12 +86,7 @@ public class ContractsController : ControllerBase
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetById([FromRoute] Guid id)
     {
-        var contract = await _contractService.GetContractByIdAsync(id);
-        if (contract == null)
-        {
-            return NotFound();
-        }
-
+        var contract = await _contractService.GetByIdAsync(id);
         return Ok(contract);
     }
 
@@ -108,7 +99,7 @@ public class ContractsController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] ContractDto contractDto)
     {
-        var contractId = await _contractService.CreateContractAsync(contractDto);
+        var contractId = await _contractService.CreateAsync(contractDto);
         return CreatedAtAction(nameof(GetById), new { id = contractId }, contractId);
     }
 
@@ -117,15 +108,9 @@ public class ContractsController : ControllerBase
     /// </summary>
     /// <param name="contractDto">Обновленные данные договора.</param>
     /// <returns>Результат операции.</returns>
-    [HttpPut("update")]
+    [HttpPut]
     public async Task<IActionResult> Update([FromBody] ContractDto contractDto)
     {
-        var existingContract = await _contractService.GetContractByIdAsync(contractDto.Id);
-        if (existingContract == null)
-        {
-            return NotFound($"Договор с идентификатором {contractDto.Id} не найден.");
-        }
-
         await _contractService.UpdateAsync(contractDto);
         return NoContent();
     }
@@ -138,12 +123,6 @@ public class ContractsController : ControllerBase
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> Delete(Guid id)
     {
-        var existingContract = await _contractService.GetContractByIdAsync(id);
-        if (existingContract == null)
-        {
-            return NotFound($"Договор с идентификатором {id} не найден.");
-        }
-
         await _contractService.DeleteAsync(id);
         return NoContent();
     }

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
 using SafeHaven.DAL.Entities;
 using SafeHaven.DAL.Interfaces;
 
@@ -14,14 +15,18 @@ public abstract class GenericRepository<T> : IGenericRepository<T>
         Context = context;
     }
 
-    public async Task<IEnumerable<T>> GetAllAsync()
+    public async Task<IEnumerable<T>> GetPaginatedAsync(int page, int pageSize)
     {
-        return await Context.Set<T>().AsNoTracking().ToListAsync();
+        return await Context.Set<T>()
+            .AsNoTracking()
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
     }
 
-    public async Task<T?> GetByIdAsync(object? id)
+    public async Task<T?> GetByFilterAsync(Expression<Func<T, bool>> filter)
     {
-        return await Context.Set<T>().FindAsync(id);
+        return await Context.Set<T>().Where(filter).FirstOrDefaultAsync();
     }
 
     public async Task AddAsync(T entity)

@@ -4,7 +4,7 @@ namespace SafeHaven.DAL.Interfaces;
 
 public interface IContractRepository : IGenericRepository<Contract>
 {
-    Task<Contract?> GetContractByIdAsync(int id);
+    Task<Contract?> GetContractByIdAsync(Guid id);
 
     /// <summary>
     /// Получает договоры, у которых значение премии меньше заданного.

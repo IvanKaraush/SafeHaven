@@ -9,7 +9,6 @@ public class InsuranceCaseMappingProfile : Profile
     public InsuranceCaseMappingProfile()
     {
         CreateMap<InsuranceCase, InsuranceCaseDto>()
-            .ForMember(dto => dto.ContractId, opt => opt.Ignore())
             .ReverseMap();
     }
 }

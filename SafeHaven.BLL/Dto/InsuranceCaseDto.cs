@@ -6,5 +6,4 @@ public class InsuranceCaseDto
     public DateTime CaseDate { get; set; }
     public required string Description { get; set; }
     public decimal PayoutAmount { get; set; }
-    public int ContractId { get; set; }
 }

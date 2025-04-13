@@ -2,8 +2,6 @@
 using SafeHaven.BLL.Interfaces;
 using SafeHaven.BLL.Mapping;
 using SafeHaven.BLL.Services;
-using SafeHaven.DAL.Interfaces;
-using SafeHaven.DAL.Repositories;
 
 namespace SafeHaven.BLL.Extensions;
 
@@ -20,10 +18,8 @@ public static class DependencyExtensions
     public static IServiceCollection RegisterBll(this IServiceCollection services)
     {
         services.AddAutoMapper(typeof(PaymentMappingProfile).Assembly);
-
-        services.AddScoped<IContractRepository, ContractRepository>();
-
         services.AddScoped<IContractService, ContractService>();
+        services.AddScoped<IClientService, ClientService>();
 
         return services;
     }
